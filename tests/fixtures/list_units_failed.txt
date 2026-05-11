@@ -1,0 +1,10 @@
+ systemd-fsckd.service        loaded    active   running   File System Check Daemon on udev
+ sys-kernel-config.mount     loaded    active   mounted   Kernel Configuration File System
+ sshd.service                loaded    active   running   OpenSSH Daemon
+ cron.service                loaded    active   running   Regular Cron Daemon
+ docker.service              loaded    active   running   Docker Application Container Engine
+ nginx.service               loaded    active   running   Nginx Web Server
+ failed-daemon.service       loaded    failed   failed    Failed Service
+ postgresql.service          loaded    active   running   PostgreSQL RDBMS
+ broken-gateway.service      loaded    failed   failed    Broken Gateway
+ systemd-journald.service    loaded    active   running   Journal Service

@@ -1,0 +1,3 @@
+n/a                        n/a              Mon 2025-01-01 03:00:00 UTC  2 weeks ago  plutus-scorer.timer      plutus-scorer.service
+n/a                        n/a              Mon 2025-01-06 03:00:00 UTC  1 week ago   weekly-research.timer    research.service
+Mon 2025-01-15 04:00:00 UTC  3h 30min left  Mon 2025-01-15 02:00:00 UTC  1h 30min ago nightly-backup.timer     backup.service

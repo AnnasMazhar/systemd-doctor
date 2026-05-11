@@ -1,0 +1,6 @@
+  sshd.service                    2.3 OK
+  docker.service                  4.1 OK
+  nginx.service                   6.5 EXPOSED
+  cron.service                    3.2 OK
+  postgresql.service              7.1 EXPOSED
+  broken-gateway.service          9.8 UNSAFE
