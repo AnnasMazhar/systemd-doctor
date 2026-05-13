@@ -23,22 +23,19 @@ def _run(cmd: List[str]) -> str:
             timeout=30,
         )
     except FileNotFoundError as exc:
-        raise RuntimeError(
-            f"required command not found: {exc.filename}"
-        ) from exc
+        raise RuntimeError(f"required command not found: {exc.filename}") from exc
     except subprocess.TimeoutExpired:
         raise RuntimeError(f"command timed out: {' '.join(cmd)}")
 
     if result.returncode != 0:
-        raise RuntimeError(
-            f"{' '.join(cmd)} exited {result.returncode}: {result.stderr.strip()}"
-        )
+        raise RuntimeError(f"{' '.join(cmd)} exited {result.returncode}: {result.stderr.strip()}")
     return result.stdout
 
 
 # ---------------------------------------------------------------------------
 # list-units
 # ---------------------------------------------------------------------------
+
 
 def list_units(state: Optional[str] = None) -> List[Dict[str, str]]:
     """Return all systemd units matching an optional *state*.
@@ -52,7 +49,11 @@ def list_units(state: Optional[str] = None) -> List[Dict[str, str]]:
         ``description``.
     """
     cmd: List[str] = [
-        "systemctl", "list-units", "--all", "--no-legend", "--plain",
+        "systemctl",
+        "list-units",
+        "--all",
+        "--no-legend",
+        "--plain",
     ]
     if state is not None:
         cmd.extend(["--state", state])
@@ -84,6 +85,7 @@ def list_units(state: Optional[str] = None) -> List[Dict[str, str]]:
 # ---------------------------------------------------------------------------
 # list-timers
 # ---------------------------------------------------------------------------
+
 
 def list_timers() -> List[Dict[str, Any]]:
     """Return all systemd timers.
@@ -205,6 +207,7 @@ def _parse_single_timer_line(line: str) -> Optional[Dict[str, Any]]:
 # analyze security
 # ---------------------------------------------------------------------------
 
+
 def analyze_security() -> List[Dict[str, Any]]:
     """Run ``systemd-analyze security`` and parse scores.
 
@@ -241,6 +244,7 @@ def analyze_security() -> List[Dict[str, Any]]:
 # ---------------------------------------------------------------------------
 # Unit restart count
 # ---------------------------------------------------------------------------
+
 
 def get_unit_restarts(unit: str) -> Tuple[int, Optional[datetime.datetime]]:
     """Return restart count and last active timestamp for *unit*.
@@ -282,6 +286,7 @@ def get_unit_restarts(unit: str) -> Tuple[int, Optional[datetime.datetime]]:
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _parse_datetime(s: str) -> Optional[datetime.datetime]:
     """Try to parse a systemd-formatted datetime string.
 
@@ -292,9 +297,11 @@ def _parse_datetime(s: str) -> Optional[datetime.datetime]:
 
     Returns ``None`` when parsing fails.
     """
-    # Strip leading day-of-week
+    # Strip leading day-of-week prefix (Mon, Tue, etc.) if present
     cleaned = s.strip()
-    cleaned = cleaned.split(" ", 1)[-1] if " " in cleaned else cleaned
+    parts = cleaned.split(" ", 1)
+    if len(parts) > 1 and parts[0][:1].isalpha() and len(parts[0]) <= 4:
+        cleaned = parts[1]
 
     # Try with timezone
     for fmt in ("%Y-%m-%d %H:%M:%S %Z", "%Y-%m-%d %H:%M:%S"):

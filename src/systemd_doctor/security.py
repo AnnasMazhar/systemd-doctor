@@ -1,6 +1,7 @@
 """Security subcommand — audit systemd service hardening."""
 
 import json
+import sys
 from typing import Any, Dict, List
 
 from systemd_doctor.formatting import color, table, traffic_light
@@ -68,7 +69,7 @@ def run_security(
     try:
         results = analyze_security()
     except RuntimeError as exc:
-        print(f"Error: {exc}")
+        print(f"Error: {exc}", file=sys.stderr)
         return 2
 
     exposed = [r for r in results if r["exposure"] >= min_exposure]
@@ -88,9 +89,7 @@ def run_security(
             }
             if show_fix:
                 entry["suggestions"] = _suggest_hardening(r["unit"])
-                entry["fix_command"] = _fix_snippet(
-                    r["unit"], _suggest_hardening(r["unit"])
-                )
+                entry["fix_command"] = _fix_snippet(r["unit"], _suggest_hardening(r["unit"]))
             data.append(entry)
         print(json.dumps(data, indent=2))
     else:
