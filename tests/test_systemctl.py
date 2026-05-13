@@ -1,6 +1,8 @@
 """Tests for systemctl.py — mock subprocess output parsing."""
 
-from systemd_doctor.systemctl import list_timers, list_units
+import datetime
+
+from systemd_doctor.systemctl import get_unit_restarts, list_timers, list_units
 
 
 def test_list_units_parses(mocker, fixtures_dir):
@@ -96,3 +98,22 @@ def test_security_parses_scores(mocker, fixtures_dir):
 
     ok_services = [r for r in results if r["predicate"] == "OK"]
     assert len(ok_services) == 3
+
+
+def test_get_unit_restarts(mocker, fixtures_dir):
+    """get_unit_restarts parses NRestarts and ActiveEnterTimestamp."""
+    mocker.patch(
+        "systemd_doctor.systemctl._run",
+        return_value=(fixtures_dir / "unit_restarts.txt").read_text(),
+    )
+    nrestarts, last_active = get_unit_restarts("nginx.service")
+    assert nrestarts == 3
+    assert last_active == datetime.datetime(2025, 1, 15, 3, 0, 0)
+
+
+def test_get_unit_restarts_empty(mocker):
+    """get_unit_restarts handles empty output."""
+    mocker.patch("systemd_doctor.systemctl._run", return_value="")
+    nrestarts, last_active = get_unit_restarts("missing.service")
+    assert nrestarts == 0
+    assert last_active is None

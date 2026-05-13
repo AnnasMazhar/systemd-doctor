@@ -1,6 +1,5 @@
 """Tests for formatting.py — colors, tables, duration parsing."""
 
-
 from systemd_doctor.formatting import (
     color,
     duration_human,

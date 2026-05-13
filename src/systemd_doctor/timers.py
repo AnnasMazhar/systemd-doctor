@@ -1,6 +1,8 @@
 """Timers subcommand — detect overdue and dead systemd timers."""
 
+import calendar
 import json
+import sys
 from typing import Any, Dict, List, Optional
 
 from systemd_doctor.formatting import duration_human, table, traffic_light
@@ -37,7 +39,7 @@ def _classify_timer(
         return None  # No data to judge
 
     now = _mock_now()  # Allows test injection via monkeypatch
-    last_ts = timer["last"].timestamp()
+    last_ts = calendar.timegm(timer["last"].timetuple())
     interval = (timer["next"] - timer["last"]).total_seconds()
     if interval <= 0:
         return None
@@ -98,7 +100,7 @@ def run_timers(
     try:
         timers = list_timers()
     except RuntimeError as exc:
-        print(f"Error: {exc}")
+        print(f"Error: {exc}", file=sys.stderr)
         return 2
 
     classified: List[Dict[str, Any]] = []
@@ -123,7 +125,9 @@ def run_timers(
             overdue_str = (
                 "DEAD"
                 if c["dead"]
-                else duration_human(float(c["overdue_by"])) if c["overdue_by"] is not None else "—"
+                else duration_human(float(c["overdue_by"]))
+                if c["overdue_by"] is not None
+                else "—"
             )
             level = "critical" if c["status"] == "CRITICAL" else "warning"
             status_str = f"{traffic_light(level)} {c['status']}"
