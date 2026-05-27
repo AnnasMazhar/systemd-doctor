@@ -165,17 +165,14 @@ def run_status(json_output: bool = False) -> int:
         if has_overdue:
             timer_names = ", ".join(t["unit"] for t in overdue_timers)
             print(
-                f"{traffic_light('warning')} Timers: {len(overdue_timers)} overdue "
-                f"({timer_names})"
+                f"{traffic_light('warning')} Timers: {len(overdue_timers)} overdue ({timer_names})"
             )
         else:
             print(f"{traffic_light('ok')} Timers: {len(all_timers)} timers, none overdue")
 
         # Crash loops
         if has_crash_loops:
-            loop_msgs = [
-                f"{cl['unit']} ({cl['restarts']} restarts)" for cl in crash_loops
-            ]
+            loop_msgs = [f"{cl['unit']} ({cl['restarts']} restarts)" for cl in crash_loops]
             print(
                 f"{traffic_light('critical')} Crash loops: {len(crash_loops)} detected "
                 f"({', '.join(loop_msgs)})"
