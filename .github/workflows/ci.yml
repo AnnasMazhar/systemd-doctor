@@ -21,7 +21,7 @@ jobs:
         python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: astral-sh/setup-uv@v7
 
@@ -43,7 +43,7 @@ jobs:
   pip-audit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: astral-sh/setup-uv@v7
       - run: uv python install 3.12 && uv sync --extra dev
       - name: Run pip-audit
@@ -52,7 +52,7 @@ jobs:
   bandit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: astral-sh/setup-uv@v7
       - run: uv python install 3.12 && uv sync --extra dev
       - name: Run bandit
@@ -67,7 +67,7 @@ jobs:
       id-token: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: astral-sh/setup-uv@v7
 
